@@ -42,6 +42,11 @@ export const getPodcasts = searchTerm => async (dispatch, getState, api) => {
   try {
     dispatch({
       type: SEARCH,
+      meta: {
+        debounce: {
+          time: 500
+        }
+      },
       payload: {
         searchTerm: searchTerm,
         isSearchLoading: true,

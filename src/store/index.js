@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { persistStore } from 'redux-persist';
+import createDebounce from 'redux-debounced';
 import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
 
 import api from '../api';
@@ -14,7 +15,12 @@ const navMiddleware = createReactNavigationReduxMiddleware(
   state => state.nav
 );
 
-const middlewares = [thunk.withExtraArgument(api), logger, navMiddleware];
+const middlewares = [
+  thunk.withExtraArgument(api),
+  logger,
+  navMiddleware,
+  createDebounce()
+];
 
 const store = createStore(
   reducers,
