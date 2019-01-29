@@ -2,13 +2,19 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { persistStore } from 'redux-persist';
+import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
 
 import api from '../api';
 import reducers from '../reducers';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const middlewares = [thunk.withExtraArgument(api), logger];
+const navMiddleware = createReactNavigationReduxMiddleware(
+  'root',
+  state => state.nav
+);
+
+const middlewares = [thunk.withExtraArgument(api), logger, navMiddleware];
 
 const store = createStore(
   reducers,

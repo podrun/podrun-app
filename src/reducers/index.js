@@ -1,9 +1,12 @@
 import { persistReducer } from 'redux-persist';
+import { createNavigationReducer } from 'react-navigation-redux-helpers';
 import storage from 'redux-persist/lib/storage';
+import { combineReducers } from 'redux';
+
+import AppNavigator from '../Navigator';
 
 import rootReducer from './root.reducer';
-import { combineReducers } from 'redux';
-//import navReducer from './navigation.reducer';
+import episodesReducer from './episodes.reducer';
 
 const rootConfig = {
   key: 'primary',
@@ -13,8 +16,9 @@ const rootConfig = {
 
 const reducers = combineReducers({
   //root: persistReducer(rootConfig, rootReducer)
-  root: rootReducer
-  //nav: navReducer
+  root: rootReducer,
+  episodes: episodesReducer,
+  nav: createNavigationReducer(AppNavigator)
 });
 
 export default reducers;

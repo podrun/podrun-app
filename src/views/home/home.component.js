@@ -6,7 +6,7 @@ import PodcastSection from '../../components/podcast-section/podcast-section.com
 import Loading from '../../components/loading/loading.component';
 import Empty from '../../components/empty/empty.component';
 import Error from '../../components/error/error.component';
-import PodcastItem from '../../components/podcast-item/podcast-item.component';
+import PodcastItem from '../../components/podcast-item';
 
 export default class HomeComponent extends Component {
   componentDidMount() {

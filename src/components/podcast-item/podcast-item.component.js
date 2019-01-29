@@ -7,20 +7,15 @@ const setImage = podcast =>
     ? podcast.lowResImage
     : 'https://source.unsplash.com/random';
 
-const PodcastItem = ({ podcast }) => {
+const PodcastItem = props => {
+  const { podcast, routeName, title, navigateTo } = props;
   return (
     <View>
-      <TouchableOpacity
-        onPress={podcast => {
-          /* 1. Navigate to the Details route with params */
-          /*this.props.navigation.navigate('Podcast', {
-            showId: podcast.showId,
-            title: podcast.title
-          });*/
-          console.log('clicked', podcast);
-        }}
-      >
-        <Card featuredTitle={podcast.title} image={setImage(podcast)} />
+      <TouchableOpacity onPress={() => navigateTo(podcast, routeName)}>
+        <Card
+          featuredTitle={podcast.title}
+          image={{ uri: setImage(podcast) }}
+        />
       </TouchableOpacity>
     </View>
   );

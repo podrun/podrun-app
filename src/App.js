@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 
 import store from './store';
-import Navigator from './Navigator';
+import AppNavigator from './Navigator';
+
+import { reduxifyNavigator } from 'react-navigation-redux-helpers';
+// Note: createReactNavigationReduxMiddleware must be run before reduxifyNavigator
+
+const AppNav = reduxifyNavigator(AppNavigator, 'root');
+const mapStateToProps = state => ({
+  state: state.nav
+});
+const AppWithNavigationState = connect(mapStateToProps)(AppNav);
 
 export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Navigator />
+        <AppWithNavigationState />
       </Provider>
     );
   }

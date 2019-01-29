@@ -15,7 +15,8 @@ const mapStateToProps = state => ({
   isEmpty: state.root.isSearchEmpty,
   isError: state.root.isSearchError || state.root.isPopularError,
   results: state.root.results,
-  popular: state.root.popular
+  popular: state.root.popular,
+  nav: state.nav
 });
 
 const mapDispatchToProps = dispatch => ({

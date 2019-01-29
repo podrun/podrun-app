@@ -13,8 +13,6 @@ import Player from 'react-native-audio-streaming-player';
 import { Standing1 } from 'humaaans-native';
 import posed from 'react-native-pose';
 
-const PODCAST_URL = 'https://audio.simplecast.com/140d99e4.mp3';
-
 const MovingHuman = posed.View({
   left: {
     x: '-100vw',
@@ -30,12 +28,13 @@ const MovingHuman = posed.View({
   }
 });
 
-export default class App extends Component {
-  constructor() {
-    super();
+export default class PlayComponent extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
       isInside: 'left',
-      status: null
+      status: null,
+      selectedPodcast: {}
     };
     this.onPlay = this.onPlay.bind(this);
     this.onPause = this.onPause.bind(this);
@@ -55,7 +54,12 @@ export default class App extends Component {
     }, 3000);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    const { nav } = this.props;
+    console.log('props', this.props);
+    this.setState({
+      selectedPodcast: nav.routes[nav.index].params.podcast
+    });
     DeviceEventEmitter.addListener(
       'onPlaybackStateChanged',
       this.onPlaybackStateChanged
@@ -83,10 +87,12 @@ export default class App extends Component {
   }
 
   onPlay() {
-    Player.play(PODCAST_URL, {
-      title: 'Testitle',
-      artist: 'Testartist',
-      album_art_uri: 'https://unsplash.it/300/300'
+    const { selectedPodcast } = this.state;
+    console.log('selectedPodcast', this.state);
+    Player.play(selectedPodcast.playbackUrl, {
+      title: selectedPodcast.title,
+      artist: selectedPodcast.description,
+      album_art_uri: selectedPodcast.lowResImage
     });
   }
 
