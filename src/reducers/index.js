@@ -7,6 +7,7 @@ import AppNavigator from '../Navigator';
 
 import rootReducer from './root.reducer';
 import episodesReducer from './episodes.reducer';
+import playReducer from './play.reducer';
 
 const rootConfig = {
   key: 'primary',
@@ -18,6 +19,7 @@ const reducers = combineReducers({
   //root: persistReducer(rootConfig, rootReducer)
   root: rootReducer,
   episodes: episodesReducer,
+  play: playReducer,
   nav: createNavigationReducer(AppNavigator)
 });
 

@@ -10,3 +10,12 @@ export const FETCH_POPULAR_ERROR = 'FETCH_POPULAR_ERROR';
 export const FETCH_EPISODES = 'FETCH_EPISODES';
 export const FETCH_EPISODES_SUCCESS = 'FETCH_EPISODES_SUCCESS';
 export const FETCH_EPISODES_ERROR = 'FETCH_EPISODES_ERROR';
+
+export const LOAD_PODCAST = 'LOAD_PODCAST';
+export const LOAD_PODCAST_SUCCESS = 'LOAD_PODCAST_SUCCESS';
+export const LOAD_PODCAST_ERROR = 'LOAD_PODCAST_ERROR';
+export const PLAY = 'PLAY';
+export const PAUSE = 'PAUSE';
+export const RESUME = 'RESUME';
+export const SKIP = 'SKIP';
+export const STOP = 'STOP';

@@ -1,138 +1,244 @@
 import React, { Component } from 'react';
 import {
   Platform,
+  Dimensions,
   StyleSheet,
   Text,
   View,
-  Dimensions,
   Button,
-  DeviceEventEmitter
+  Slider,
+  Image,
+  findNodeHandle,
+  DeviceEventEmitter,
+  InteractionManager
 } from 'react-native';
-import Player from 'react-native-audio-streaming-player';
 
-import { Standing1 } from 'humaaans-native';
-import posed from 'react-native-pose';
+import { AudioManager, BlurView } from 'react-native-media';
 
-const MovingHuman = posed.View({
-  left: {
-    x: '-100vw',
-    transition: {
-      duration: 0
-    }
-  },
-  right: {
-    x: '100vw',
-    transition: {
-      duration: 1000
-    }
-  }
-});
+const { width, height } = Dimensions.get('window');
 
 export default class PlayComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isInside: 'left',
-      status: null,
-      selectedPodcast: {}
+      time: 0,
+      imageData: '',
+      selectedPodcast: null,
+      viewRef: null
     };
-    this.onPlay = this.onPlay.bind(this);
-    this.onPause = this.onPause.bind(this);
-
-    this.onPlaybackActionChanged = this.onPlaybackActionChanged.bind(this);
-    this.onPlaybackStateChanged = this.onPlaybackStateChanged.bind(this);
-    this.animateHuman = this.animateHuman.bind(this);
-    this.animated = null;
+    this.timeChange = this.timeChange.bind(this);
+    this.addBLur = this.addBLur.bind(this);
   }
 
-  animateHuman() {
-    this.animated = setInterval(() => {
-      this.setState({ isInside: 'right' });
-      setTimeout(() => {
-        this.setState({ isInside: 'left' });
-      }, 900);
-    }, 3000);
-  }
-
-  componentDidMount() {
+  async componentDidMount() {
     const { nav } = this.props;
-    console.log('props', this.props);
+    const selectedPodcast = nav.routes[nav.index].params;
+    console.log('selectedPodcast', selectedPodcast);
     this.setState({
-      selectedPodcast: nav.routes[nav.index].params.podcast
+      selectedPodcast: selectedPodcast.podcast
     });
+
     DeviceEventEmitter.addListener(
-      'onPlaybackStateChanged',
-      this.onPlaybackStateChanged
+      AudioManager.Events.onTimeChanged,
+      currentTime => {
+        console.log('current time ' + currentTime);
+      }
     );
-    DeviceEventEmitter.addListener(
-      'onPlaybackActionChanged',
-      this.onPlaybackActionChanged
-    );
+
+    AudioManager.setAudioFinishedCallback(null);
+
+    DeviceEventEmitter.addListener(AudioManager.Events.onAudioFinished, () => {
+      alert('finished!');
+    });
   }
 
-  componentWillUnmount() {
-    DeviceEventEmitter.removeAllListeners();
+  async pause() {
+    let sucess = await AudioManager.pause();
+    console.log('pause: ' + sucess);
+    alert(sucess);
   }
 
-  onPlaybackActionChanged(event) {
-    console.log('Current Action: ' + event.action);
+  async resume() {
+    let sucess = await AudioManager.resume();
+    console.log('resume: ' + sucess);
+    alert(sucess);
   }
 
-  onPlaybackStateChanged(event) {
-    console.log('PlaybackState: ' + event.state);
-    this.setState({ status: event.state });
-    if (event.state === 'PLAYING') {
-      this.animateHuman();
-    }
+  async stop() {
+    let sucess = await AudioManager.stop();
+    console.log('stop: ' + sucess);
+    alert(sucess);
   }
 
-  onPlay() {
+  async loadAndPlay() {
     const { selectedPodcast } = this.state;
-    console.log('selectedPodcast', this.state);
-    Player.play(selectedPodcast.playbackUrl, {
-      title: selectedPodcast.title,
-      artist: selectedPodcast.description,
-      album_art_uri: selectedPodcast.lowResImage
-    });
+    let sucess = await AudioManager.loadPlay(
+      selectedPodcast.playbackUrl,
+      1,
+      false,
+      40681
+    );
+    console.log('load and play: ' + sucess);
+    alert(sucess);
   }
 
-  onPause() {
-    const { status } = this.state;
-    const isPaused = status === 'PAUSED';
-    if (isPaused) {
-      Player.resume();
-    } else {
-      Player.pause();
-      clearInterval(this.animated);
-    }
+  timeChange(time) {
+    this.setState({ time });
+    AudioManager.seekTime(time * 1000);
+  }
+
+  async mute() {
+    console.log('Muted');
+  }
+
+  async toEarSpeaker() {
+    console.log('TO SPEAKER: ' + (await AudioManager.setAudioOutputRoute(1)));
+  }
+
+  async toDefaultSpeaker() {
+    console.log('TO SPEAKER: ' + (await AudioManager.setAudioOutputRoute(0)));
+  }
+
+  async idleTestFalse() {
+    // set false to turn off the sleep mode
+    alert('idletestfalse');
+  }
+
+  async getCurrentAudioName() {
+    let sucess = await AudioManager.getCurrentAudioName(true);
+    console.log('Current name: ' + sucess);
+    alert('Current name: ' + sucess);
+  }
+
+  async addBLur() {
+    console.log('Add blur');
+  }
+
+  async duration() {
+    alert(await AudioManager.getDuration());
+  }
+
+  viewLoaded() {
+    InteractionManager.runAfterInteractions(() => {
+      setTimeout(() => {
+        this.setState({ viewRef: findNodeHandle(this.refs.backgroundBlur) });
+      }, 500);
+    });
   }
 
   render() {
-    const { isInside, status } = this.state;
-    const isPlaying = status === 'PLAYING';
-    const isPaused = status === 'PAUSED';
     return (
       <View style={styles.container}>
-        {!isPlaying && (
-          <Button
-            title="Play"
-            style={styles.welcome}
-            onPress={() => this.onPlay()}
-            color="red"
-          />
-        )}
-        {(isPlaying || isPaused) && (
-          <React.Fragment>
+        <View style={styles.container}>
+          <View style={{ flexDirection: 'row' }}>
             <Button
-              title={isPaused ? 'Resume' : 'Pause'}
-              style={styles.welcome}
-              onPress={() => this.onPause()}
-              color="red"
+              style={styles.button}
+              onPress={() => this.loadAndPlay()}
+              title="LOAD_PLAY"
+              color="#841584"
             />
-            <MovingHuman pose={isInside}>
-              <Standing1 />
-            </MovingHuman>
-          </React.Fragment>
+
+            <Button
+              style={styles.button}
+              onPress={() => this.getCurrentAudioName()}
+              title="NAME"
+              color="#841584"
+            />
+          </View>
+
+          <View style={{ flexDirection: 'row' }}>
+            <Button
+              style={styles.button}
+              onPress={this.pause}
+              title="PAUSE"
+              color="#841584"
+            />
+
+            <Button
+              style={styles.button}
+              onPress={this.resume}
+              title="RESUME"
+              color="#841584"
+            />
+
+            <Button
+              style={styles.button}
+              onPress={this.stop}
+              title="STOP"
+              color="#841584"
+            />
+
+            <Button
+              style={styles.button}
+              onPress={this.duration}
+              title="DURATION"
+              color="#841584"
+            />
+          </View>
+
+          <View style={{ alignSelf: 'stretch' }}>
+            <Text style={styles.text}>{String(this.state.time)}</Text>
+            <Slider
+              step={1}
+              maximumValue={100}
+              onValueChange={this.timeChange}
+              value={this.state.time}
+            />
+          </View>
+
+          <View style={{ flexDirection: 'row' }}>
+            <Button
+              style={styles.button}
+              onPress={this.mute}
+              title="MUTE"
+              color="#841584"
+            />
+
+            <Button
+              style={styles.button}
+              onPress={this.addBLur}
+              title="ADD BLUR"
+              color="#841584"
+            />
+          </View>
+
+          <View style={{ flexDirection: 'row' }}>
+            <Button
+              style={styles.button}
+              onPress={this.toEarSpeaker}
+              title="TO EAR"
+              color="#841584"
+            />
+
+            <Button
+              style={styles.button}
+              onPress={this.toDefaultSpeaker}
+              title="TO DEFAULT"
+              color="#841584"
+            />
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  renderBlurView() {
+    const tintColor = ['#ffffff', '#000000'];
+    if (this.state.blurType === 'xlight') tintColor.reverse();
+
+    return (
+      <View
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+      >
+        {this.state.viewRef && (
+          <BlurView
+            style={[styles.overlay]}
+            blurRadius={9}
+            blurType={'xlight'}
+            viewRef={this.state.viewRef}
+            downsampleFactor={5}
+            overlayColor={'rgba(255, 255, 255, 0.1)'}
+          />
         )}
       </View>
     );
@@ -142,22 +248,26 @@ export default class PlayComponent extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF'
+    alignItems: 'center'
   },
-  welcome: {
+  button: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10
+    marginBottom: 100,
+    zIndex: 1
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5
-  },
-  video: {
-    height: 500,
-    width: 300
+  overlay: {
+    zIndex: 99,
+    elevation: 99,
+    flex: 1,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    // opacity: 0.5,
+    // backgroundColor: 'black',
+    width: width,
+    height: height
   }
 });
