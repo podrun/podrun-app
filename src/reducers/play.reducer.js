@@ -2,6 +2,7 @@ import {
   LOAD_PODCAST,
   LOAD_PODCAST_SUCCESS,
   LOAD_PODCAST_ERROR,
+  SET_PODCAST,
   PLAY,
   PAUSE,
   RESUME,
@@ -30,6 +31,11 @@ const playReducer = (state = initialState, action) => {
         ...action.payload
       };
     case LOAD_PODCAST_ERROR:
+      return {
+        ...state,
+        ...action.payload
+      };
+    case SET_PODCAST:
       return {
         ...state,
         ...action.payload
