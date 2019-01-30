@@ -3,11 +3,11 @@ import { Dimensions, View, StyleSheet, Text, Image } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-const PlayItem = ({ podcast }) => (
+const PlayItem = ({ isLoading, podcast }) => (
   <View style={styles.container}>
     <Image style={styles.image} source={{ uri: podcast.lowResImage }} />
     <View>
-      <Text>{podcast.title}</Text>
+      <Text>{isLoading ? 'Loading...' : podcast.title}</Text>
     </View>
   </View>
 );

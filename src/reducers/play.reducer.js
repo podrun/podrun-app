@@ -3,6 +3,7 @@ import {
   LOAD_PODCAST_SUCCESS,
   LOAD_PODCAST_ERROR,
   SET_PODCAST,
+  CHANGE_STATE,
   PLAY,
   PAUSE,
   RESUME,
@@ -15,7 +16,8 @@ const initialState = {
   isPodcastLoading: false,
   isPodcastError: false,
   podcast: {},
-  position: null
+  position: null,
+  playerState: 'stopped'
 };
 
 const playReducer = (state = initialState, action) => {
@@ -36,6 +38,11 @@ const playReducer = (state = initialState, action) => {
         ...action.payload
       };
     case SET_PODCAST:
+      return {
+        ...state,
+        ...action.payload
+      };
+    case CHANGE_STATE:
       return {
         ...state,
         ...action.payload

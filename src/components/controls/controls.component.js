@@ -1,22 +1,26 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
 const Controls = ({ paused, onPressPlay, onPressPause }) => (
-  <View style={styles.container}>
+  <View style={styles.controls}>
     {!paused ? (
       <TouchableOpacity onPress={onPressPause}>
-        <View style={styles.playButton}>
-          <Image source={require('../img/ic_pause_white_48pt.png')} />
-        </View>
+        <Text>Pause</Text>
       </TouchableOpacity>
     ) : (
       <TouchableOpacity onPress={onPressPlay}>
-        <View style={styles.playButton}>
-          <Image source={require('../img/ic_play_arrow_white_48pt.png')} />
-        </View>
+        <Text>Play</Text>
       </TouchableOpacity>
     )}
   </View>
 );
+
+const styles = StyleSheet.create({
+  controls: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 400
+  }
+});
 
 export default Controls;
