@@ -4221,9 +4221,9 @@ react-native-webview-messaging@^2.0.0-alpha.4:
   dependencies:
     events "^1.1.1"
 
-react-native-webview@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-3.0.0.tgz#451e226b68cab44f926a8d89771372e3550d430a"
+react-native-webview@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-4.1.0.tgz#c297e22dedb747c5e1dfcbb0355a676ec41ec4f8"
   dependencies:
     escape-string-regexp "^1.0.5"
     fbjs "^0.8.17"
