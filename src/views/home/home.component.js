@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 
 import SearchComponent from '../../components/search/search.component';
 import PodcastSection from '../../components/podcast-section/podcast-section.component';
 import Loading from '../../components/loading/loading.component';
 import Empty from '../../components/empty/empty.component';
 import Error from '../../components/error/error.component';
-import PodcastItem from '../../components/podcast-item';
 
 export default class HomeComponent extends Component {
   componentDidMount() {
@@ -45,9 +44,7 @@ export default class HomeComponent extends Component {
         )}
         {!(isLoading || isEmpty || isError) && displaySearch && (
           <ScrollView>
-            {results.map((podcast, index) => (
-              <PodcastItem key={index} podcast={podcast} />
-            ))}
+            <PodcastSection section={{ items: results }} />
           </ScrollView>
         )}
       </View>
