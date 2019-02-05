@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/poprun/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "iphone": "react-native run-ios --simulator=\"iPhone 6\"",
     "device": "react-native run-ios --device \"iPhone de Jérémie\"",
     "test": "jest"
@@ -13,11 +14,12 @@
     "node-voxpods": "^1.0.1",
     "react": "16.6.3",
     "react-native": "0.57.8",
-    "react-native-audio-streaming-player": "https://github.com/nradnerd/react-native-audio-streaming-player",
     "react-native-elements": "^1.0.0",
     "react-native-pose": "^0.9.0",
+    "react-native-swift": "^1.2.2",
+    "react-native-track-player": "^1.1.1",
     "react-native-vector-icons": "^6.1.0",
-    "react-native-webview": "^3.0.0",
+    "react-native-webview": "^4.1.0",
     "react-native-webview-messaging": "^2.0.0-alpha.4",
     "react-navigation": "^3.0.9",
     "react-navigation-redux-helpers": "^2.0.9",
@@ -36,5 +38,6 @@
   },
   "jest": {
     "preset": "react-native"
-  }
+  },
+  "isSwift": true
 }

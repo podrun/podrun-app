@@ -1,139 +1,198 @@
 import React, { Component } from 'react';
 import {
-  Platform,
+  Alert,
+  Button,
+  Dimensions,
   StyleSheet,
   Text,
   View,
-  Dimensions,
-  Button,
-  DeviceEventEmitter
+  ActivityIndicator
 } from 'react-native';
-import Player from 'react-native-audio-streaming-player';
+import { Card } from 'react-native-elements';
+import TrackPlayer, { ProgressComponent } from 'react-native-track-player';
 
-import { Standing1 } from 'humaaans-native';
-import posed from 'react-native-pose';
+import PlayItem from '../../components/play-item/play-item.component';
+import Controls from '../../components/controls/controls.component';
 
-const MovingHuman = posed.View({
-  left: {
-    x: '-100vw',
-    transition: {
-      duration: 0
-    }
-  },
-  right: {
-    x: '100vw',
-    transition: {
-      duration: 1000
-    }
-  }
-});
+const MESSAGE_PREFIX = 'react-native-webview';
+
+import { WebView } from 'react-native-webview';
 
 export default class PlayComponent extends Component {
   constructor(props) {
     super(props);
+    this.webview = null;
+    this.prepareTrack = this.prepareTrack.bind(this);
+    this.pause = this.pause.bind(this);
+    this.play = this.play.bind(this);
+    this.stop = this.stop.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    // this.handleMessage = this.handleMessage.bind(this);
+    this.onWebViewLoaded = this.onWebViewLoaded.bind(this);
+    this.showLoadingIndicator = this.showLoadingIndicator.bind(this);
+    this.onError = this.onError.bind(this);
+
     this.state = {
-      isInside: 'left',
-      status: null,
-      selectedPodcast: {}
+      webViewNotLoaded: true
     };
-    this.onPlay = this.onPlay.bind(this);
-    this.onPause = this.onPause.bind(this);
-
-    this.onPlaybackActionChanged = this.onPlaybackActionChanged.bind(this);
-    this.onPlaybackStateChanged = this.onPlaybackStateChanged.bind(this);
-    this.animateHuman = this.animateHuman.bind(this);
-    this.animated = null;
   }
 
-  animateHuman() {
-    this.animated = setInterval(() => {
-      this.setState({ isInside: 'right' });
-      setTimeout(() => {
-        this.setState({ isInside: 'left' });
-      }, 900);
-    }, 3000);
-  }
+  async componentDidMount() {
+    const { nav, setPodcast, setPlayerState } = this.props;
+    const selectedPodcast = nav.routes[nav.index].params;
+    const { podcast } = selectedPodcast;
+    setPodcast(podcast);
 
-  componentDidMount() {
-    const { nav } = this.props;
-    console.log('props', this.props);
-    this.setState({
-      selectedPodcast: nav.routes[nav.index].params.podcast
+    await this.prepareTrack(podcast);
+    TrackPlayer.addEventListener('playback-state', ({ state }) => {
+      console.log('state', state);
+      setPlayerState(state);
+      if (state === 'playing') {
+        this.sendMessage('CHANGE_SETTINGS', {
+          isPlaying: true,
+          tempo: 130,
+          gain: 0.2
+        });
+      } else {
+        this.sendMessage('CHANGE_SETTINGS', {
+          isPlaying: false
+        });
+      }
     });
-    DeviceEventEmitter.addListener(
-      'onPlaybackStateChanged',
-      this.onPlaybackStateChanged
-    );
-    DeviceEventEmitter.addListener(
-      'onPlaybackActionChanged',
-      this.onPlaybackActionChanged
-    );
   }
 
   componentWillUnmount() {
-    DeviceEventEmitter.removeAllListeners();
+    this.stop();
   }
 
-  onPlaybackActionChanged(event) {
-    console.log('Current Action: ' + event.action);
+  async prepareTrack(podcast) {
+    const track = {
+      id: podcast.title,
+      url: podcast.playbackUrl,
+      title: podcast.title,
+      artist: 'deadmau5',
+      artwork: podcast.lowResImage
+    };
+    await TrackPlayer.add([track]);
+    this.pause();
   }
 
-  onPlaybackStateChanged(event) {
-    console.log('PlaybackState: ' + event.state);
-    this.setState({ status: event.state });
-    if (event.state === 'PLAYING') {
-      this.animateHuman();
+  play() {
+    TrackPlayer.play();
+  }
+
+  pause() {
+    TrackPlayer.pause();
+  }
+
+  stop() {
+    TrackPlayer.stop();
+  }
+
+  onWebViewLoaded() {
+    this.setState(
+      {
+        webViewNotLoaded: false
+      },
+      () => {
+        // let the parent know the webview is ready
+        if (this.props.hasOwnProperty('onWebViewReady')) {
+          this.props.onWebViewReady();
+        }
+        this.play();
+      }
+    );
+  }
+
+  /* handleMessage(event) {
+    let msgData;
+    console.log(`ReactWebView: handleMessage called: `, event);
+
+    try {
+      msgData = JSON.parse(event.nativeEvent.data);
+      if (
+        msgData.hasOwnProperty('prefix') &&
+        msgData.prefix === MESSAGE_PREFIX
+      ) {
+        console.log(`ReactWebView: received message ${msgData.type}`);
+        this.sendMessage('MESSAGE_ACKNOWLEDGED');
+
+        switch (msgData.type) {
+          case 'CONSOLE_LOG':
+            console.log('From Webview: ', msgData.payload.msg);
+            break;
+          default:
+            console.warn(
+              `ReactWebView Error: Unhandled message type received "${
+                msgData.type
+              }"`
+            );
+        }
+      }
+    } catch (err) {
+      console.warn(err);
+      return;
+    }
+  } */
+
+  sendMessage(type, payload) {
+    // only send message when webview is loaded
+    if (!this.state.webViewNotLoaded) {
+      console.log(
+        `WebView: sending message ${type}, ${JSON.stringify(payload)}`
+      );
+      this.webview.postMessage(
+        JSON.stringify({
+          prefix: MESSAGE_PREFIX,
+          type,
+          payload
+        }),
+        '*'
+      );
     }
   }
 
-  onPlay() {
-    const { selectedPodcast } = this.state;
-    console.log('selectedPodcast', this.state);
-    Player.play(selectedPodcast.playbackUrl, {
-      title: selectedPodcast.title,
-      artist: selectedPodcast.description,
-      album_art_uri: selectedPodcast.lowResImage
-    });
+  showLoadingIndicator() {
+    return (
+      <ActivityIndicator
+        size="large"
+        animating={this.state.webViewNotLoaded}
+        color="blue"
+      />
+    );
   }
 
-  onPause() {
-    const { status } = this.state;
-    const isPaused = status === 'PAUSED';
-    if (isPaused) {
-      Player.resume();
-    } else {
-      Player.pause();
-      clearInterval(this.animated);
-    }
+  onError(error) {
+    Alert.alert('WebView onError', error, [
+      { text: 'OK', onPress: () => console.log('OK Pressed') }
+    ]);
+    console.log('WebView onError: ', error);
   }
 
   render() {
-    const { isInside, status } = this.state;
-    const isPlaying = status === 'PLAYING';
-    const isPaused = status === 'PAUSED';
+    const { podcast, playerState } = this.props;
+    const isPaused = playerState === 'paused';
+    const isLoading = playerState === 'loading';
     return (
       <View style={styles.container}>
-        {!isPlaying && (
-          <Button
-            title="Play"
-            style={styles.welcome}
-            onPress={() => this.onPlay()}
-            color="red"
-          />
-        )}
-        {(isPlaying || isPaused) && (
-          <React.Fragment>
-            <Button
-              title={isPaused ? 'Resume' : 'Pause'}
-              style={styles.welcome}
-              onPress={() => this.onPause()}
-              color="red"
-            />
-            <MovingHuman pose={isInside}>
-              <Standing1 />
-            </MovingHuman>
-          </React.Fragment>
-        )}
+        {podcast.title && <PlayItem podcast={podcast} isLoading={isLoading} />}
+        <Controls
+          paused={isPaused}
+          onPressPause={this.pause}
+          onPressPlay={this.play}
+        />
+        <WebView
+          style={{ display: 'none' }}
+          ref={webview => (this.webview = webview)}
+          source={{ uri: 'http://reflective-copper.surge.sh/' }}
+          onLoadEnd={this.onWebViewLoaded}
+          startInLoadingState={true}
+          renderLoading={this.showLoadingIndicator}
+          renderError={this.onError}
+          javaScriptEnabled={true}
+          onError={this.onError}
+          mixedContentMode={'always'}
+        />
       </View>
     );
   }
@@ -142,22 +201,9 @@ export default class PlayComponent extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF'
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5
-  },
-  video: {
-    height: 500,
-    width: 300
+    height: Dimensions.get('window').height
   }
 });
