@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { ActivityIndicator } from 'react-native';
 import SearchBar from 'react-native-searchbar';
-
-const loadingIcon = <Icon name="loading1" />;
 
 export default class SearchComponent extends Component {
   constructor() {
@@ -12,14 +10,21 @@ export default class SearchComponent extends Component {
     };
     this.updateSearch = this.updateSearch.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
+    this.showSearchBar = this.showSearchBar.bind(this);
+    this.sendSearch = this.sendSearch.bind(this);
   }
 
   updateSearch(search) {
-    if(search !== "") {
-      const { onChangeText } = this.props;
+    if (search !== '') {
       this.setState({ search });
-      onChangeText(search);
     }
+  }
+
+  sendSearch() {
+    const { search } = this.state;
+    const { onChangeText } = this.props;
+
+    onChangeText(search);
   }
 
   clearSearch() {
@@ -28,15 +33,23 @@ export default class SearchComponent extends Component {
     onClear();
   }
 
+  showSearchBar() {
+    this.searchBar.show();
+  }
+
   render() {
     const { isLoading } = this.props;
     const { search } = this.state;
-    console.log(this.props);
     return (
       <SearchBar
+        ref={ref => (this.searchBar = ref)}
+        showOnLoad={false}
+        focusOnLayout={false}
         placeholder="Search"
-        backButton={isLoading ? loadingIcon : null}
-        handleSearch={this.updateSearch}
+        onBack={this.clearSearch}
+        backButton={isLoading ? <ActivityIndicator size="small" /> : null}
+        handleChangeText={input => this.updateSearch(input)}
+        onSubmitEditing={this.sendSearch}
         onX={this.clearSearch}
         value={search}
         showOnLoad
