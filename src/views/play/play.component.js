@@ -4,19 +4,17 @@ import {
   Button,
   Dimensions,
   StyleSheet,
-  Text,
   View,
   ActivityIndicator
 } from 'react-native';
-import { Card } from 'react-native-elements';
+import { WebView } from 'react-native-webview';
 import TrackPlayer, { ProgressComponent } from 'react-native-track-player';
+import _ from 'lodash';
 
 import PlayItem from '../../components/play-item/play-item.component';
 import Controls from '../../components/controls/controls.component';
 
 const MESSAGE_PREFIX = 'react-native-webview';
-
-import { WebView } from 'react-native-webview';
 
 export default class PlayComponent extends Component {
   constructor(props) {
@@ -27,7 +25,6 @@ export default class PlayComponent extends Component {
     this.play = this.play.bind(this);
     this.stop = this.stop.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
-    // this.handleMessage = this.handleMessage.bind(this);
     this.onWebViewLoaded = this.onWebViewLoaded.bind(this);
     this.showLoadingIndicator = this.showLoadingIndicator.bind(this);
     this.onError = this.onError.bind(this);
@@ -37,21 +34,31 @@ export default class PlayComponent extends Component {
     };
   }
 
+  static navigationOptions = ({ navigation }) => ({
+    headerRight: (
+      <Button
+        onPress={() => navigation.navigate('Settings')}
+        title="Settings"
+      />
+    )
+  });
+
   async componentDidMount() {
-    const { nav, setPodcast, setPlayerState } = this.props;
+    const { nav, setPodcast, setPlayerState, settings } = this.props;
     const selectedPodcast = nav.routes[nav.index].params;
     const { podcast } = selectedPodcast;
+    const { gain, tempo, isActivated } = settings;
     setPodcast(podcast);
 
     await this.prepareTrack(podcast);
     TrackPlayer.addEventListener('playback-state', ({ state }) => {
       console.log('state', state);
       setPlayerState(state);
-      if (state === 'playing') {
+      if (state === 'playing' && isActivated) {
         this.sendMessage('CHANGE_SETTINGS', {
           isPlaying: true,
-          tempo: 130,
-          gain: 0.2
+          tempo: tempo,
+          gain: gain
         });
       } else {
         this.sendMessage('CHANGE_SETTINGS', {
@@ -65,7 +72,19 @@ export default class PlayComponent extends Component {
     this.stop();
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { settings } = this.props;
+    if (!_.isEqual(settings, nextProps.settings)) {
+      this.sendMessage('CHANGE_SETTINGS', {
+        isPlaying: nextProps.isActivated,
+        tempo: nextProps.tempo,
+        gain: nextProps.gain
+      });
+    }
+  }
+
   async prepareTrack(podcast) {
+    const { isActivated } = this.props.settings;
     const track = {
       id: podcast.title,
       url: podcast.playbackUrl,
@@ -73,8 +92,11 @@ export default class PlayComponent extends Component {
       artist: 'deadmau5',
       artwork: podcast.lowResImage
     };
+    await TrackPlayer.reset();
     await TrackPlayer.add([track]);
-    this.pause();
+    if (isActivated) {
+      this.pause();
+    }
   }
 
   play() {
@@ -170,7 +192,7 @@ export default class PlayComponent extends Component {
   }
 
   render() {
-    const { podcast, playerState } = this.props;
+    const { podcast, playerState, settings } = this.props;
     const isPaused = playerState === 'paused';
     const isLoading = playerState === 'loading';
     return (
@@ -181,18 +203,20 @@ export default class PlayComponent extends Component {
           onPressPause={this.pause}
           onPressPlay={this.play}
         />
-        <WebView
-          style={{ display: 'none' }}
-          ref={webview => (this.webview = webview)}
-          source={{ uri: 'http://reflective-copper.surge.sh/' }}
-          onLoadEnd={this.onWebViewLoaded}
-          startInLoadingState={true}
-          renderLoading={this.showLoadingIndicator}
-          renderError={this.onError}
-          javaScriptEnabled={true}
-          onError={this.onError}
-          mixedContentMode={'always'}
-        />
+        {settings.isActivated && (
+          <WebView
+            style={{ display: 'none' }}
+            ref={webview => (this.webview = webview)}
+            source={{ uri: 'http://reflective-copper.surge.sh/' }}
+            onLoadEnd={this.onWebViewLoaded}
+            startInLoadingState={true}
+            renderLoading={this.showLoadingIndicator}
+            renderError={this.onError}
+            javaScriptEnabled={true}
+            onError={this.onError}
+            mixedContentMode={'always'}
+          />
+        )}
       </View>
     );
   }

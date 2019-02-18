@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { Provider, connect } from 'react-redux';
+import { reduxifyNavigator } from 'react-navigation-redux-helpers';
 
 import store from './store';
 import AppNavigator from './Navigator';
-
-import { reduxifyNavigator } from 'react-navigation-redux-helpers';
-// Note: createReactNavigationReduxMiddleware must be run before reduxifyNavigator
 
 const AppNav = reduxifyNavigator(AppNavigator, 'root');
 const mapStateToProps = state => ({

@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 
 import SearchComponent from '../../components/search/search.component';
 import PodcastSection from '../../components/podcast-section/podcast-section.component';
 import Loading from '../../components/loading/loading.component';
 import Empty from '../../components/empty/empty.component';
 import Error from '../../components/error/error.component';
-import PodcastItem from '../../components/podcast-item';
 
 export default class HomeComponent extends Component {
+  static navigationOptions = {
+    headerStyle: {
+      display: 'none'
+    }
+  };
+
   componentDidMount() {
     const { getPopular } = this.props;
     getPopular();
   }
+
   render() {
     const {
       search,
@@ -28,28 +34,32 @@ export default class HomeComponent extends Component {
     } = this.props;
     return (
       <View style={styles.container}>
-        <SearchComponent
-          isLoading={isSearchLoading}
-          onClear={clearResults}
-          onChangeText={search}
-        />
-        {isLoading && <Loading />}
-        {isEmpty && <Empty />}
-        {isError && <Error />}
-        {!(isLoading || isEmpty || isError) && displayPopular && (
-          <ScrollView>
-            {popular.map((section, index) => (
-              <PodcastSection key={index} section={section} />
-            ))}
-          </ScrollView>
-        )}
-        {!(isLoading || isEmpty || isError) && displaySearch && (
-          <ScrollView>
-            {results.map((podcast, index) => (
-              <PodcastItem key={index} podcast={podcast} />
-            ))}
-          </ScrollView>
-        )}
+        <View style={styles.search}>
+          {!isLoading && (
+            <SearchComponent
+              isLoading={isSearchLoading}
+              onClear={clearResults}
+              onChangeText={search}
+            />
+          )}
+        </View>
+        <View style={styles.content}>
+          {isLoading && <Loading />}
+          {isEmpty && <Empty />}
+          {isError && <Error />}
+          {!(isLoading || isEmpty || isError) && displayPopular && (
+            <ScrollView>
+              {popular.map((section, index) => (
+                <PodcastSection key={index} section={section} />
+              ))}
+            </ScrollView>
+          )}
+          {!(isLoading || isEmpty || isError) && displaySearch && (
+            <ScrollView>
+              <PodcastSection section={{ items: results }} />
+            </ScrollView>
+          )}
+        </View>
       </View>
     );
   }
@@ -57,7 +67,17 @@ export default class HomeComponent extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around'
+  },
+  search: {
+    height: '5%'
+  },
+  content: {
+    marginTop: '10%',
+    paddingTop: 20,
+    height: '95%'
   },
   text: {
     color: 'white',

@@ -6,13 +6,20 @@ import PlayComponent from './play.component';
 
 const mapStateToProps = state => ({
   nav: state.nav,
+  settings: state.settings,
   podcast: state.play.podcast,
   playerState: state.play.playerState
 });
 
 const mapDispatchToProps = dispatch => ({
   setPodcast: podcast => dispatch(setPodcast(podcast)),
-  setPlayerState: state => dispatch(setPlayerState(state))
+  setPlayerState: state => dispatch(setPlayerState(state)),
+  goToSettings: () =>
+    dispatch(
+      NavigationActions.navigate({
+        routeName: 'Settings'
+      })
+    )
 });
 
 export default connect(

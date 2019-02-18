@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { SearchBar } from 'react-native-elements';
+import { ActivityIndicator } from 'react-native';
+import SearchBar from 'react-native-searchbar';
 
 export default class SearchComponent extends Component {
   constructor() {
@@ -8,11 +9,21 @@ export default class SearchComponent extends Component {
       search: ''
     };
     this.updateSearch = this.updateSearch.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
+    this.showSearchBar = this.showSearchBar.bind(this);
+    this.sendSearch = this.sendSearch.bind(this);
   }
 
   updateSearch(search) {
+    if (search !== '') {
+      this.setState({ search });
+    }
+  }
+
+  sendSearch() {
+    const { search } = this.state;
     const { onChangeText } = this.props;
-    this.setState({ search });
+
     onChangeText(search);
   }
 
@@ -22,17 +33,26 @@ export default class SearchComponent extends Component {
     onClear();
   }
 
+  showSearchBar() {
+    this.searchBar.show();
+  }
+
   render() {
     const { isLoading } = this.props;
     const { search } = this.state;
-
     return (
       <SearchBar
+        ref={ref => (this.searchBar = ref)}
+        showOnLoad={false}
+        focusOnLayout={false}
         placeholder="Search"
-        onChangeText={this.updateSearch}
-        onClear={this.clearSearch}
-        showLoading={isLoading}
+        onBack={this.clearSearch}
+        backButton={isLoading ? <ActivityIndicator size="small" /> : null}
+        handleChangeText={input => this.updateSearch(input)}
+        onSubmitEditing={this.sendSearch}
+        onX={this.clearSearch}
         value={search}
+        showOnLoad
       />
     );
   }

@@ -8,15 +8,15 @@ import AppNavigator from '../Navigator';
 import rootReducer from './root.reducer';
 import episodesReducer from './episodes.reducer';
 import playReducer from './play.reducer';
+import settingsReducer from './settings.reducer';
 
 const rootConfig = {
   key: 'primary',
-  storage,
-  blacklist: ['searchTerm', 'results']
+  storage
 };
 
 const reducers = combineReducers({
-  //root: persistReducer(rootConfig, rootReducer)
+  settings: persistReducer(rootConfig, settingsReducer),
   root: rootReducer,
   episodes: episodesReducer,
   play: playReducer,
