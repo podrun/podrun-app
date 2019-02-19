@@ -17,17 +17,15 @@ class PodcastSection extends React.Component {
     this.state = {
       slider1ActiveSlide: 0
     };
-    this._renderItemWithParallax = this._renderItemWithParallax.bind(this);
+    this._renderItem = this._renderItem.bind(this);
   }
 
-  _renderItemWithParallax({ item, index }, parallaxProps) {
+  _renderItem({ item, index }) {
     const { isVertical, routeName } = this.props;
     return (
       <PodcastItem
         data={item}
         even={(index + 1) % 2 === 0}
-        parallax={true}
-        parallaxProps={parallaxProps}
         routeName={routeName}
         isVertical={isVertical}
       />
@@ -45,19 +43,20 @@ class PodcastSection extends React.Component {
         <Carousel
           ref={c => (this._slider1Ref = c)}
           data={section.items}
-          renderItem={this._renderItemWithParallax}
+          renderItem={this._renderItem}
           sliderWidth={isVertical ? verticalSlideWidth : sliderWidth}
           itemWidth={isVertical ? verticalSlideWidth : itemWidth}
-          hasParallaxImages={true}
           inactiveSlideScale={0.94}
           inactiveSlideOpacity={0.7}
           containerCustomStyle={styles.slider}
-          contentContainerCustomStyle={styles.sliderContentContainer}
+          contentContainerCustomStyle={styles.sliderContentContainyarer}
           autoplay={false}
           vertical={isVertical}
           sliderHeight={isVertical ? verticalSlideHeight : null}
           itemHeight={isVertical ? itemHeight : null}
-          onBeforeSnapToItem={index => this.setState({ slider1ActiveSlide: index })}
+          onBeforeSnapToItem={index =>
+            this.setState({ slider1ActiveSlide: index })
+          }
         />
       </View>
     );

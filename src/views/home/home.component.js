@@ -45,18 +45,20 @@ export default class HomeComponent extends Component {
           )}
         </View>
         <View style={styles.content}>
-          {isLoading && <Loading />}
+          {isLoading && <Loading text={'Fetching popular podcasts'} />}
           {isEmpty && <Empty />}
           {isError && <Error />}
           {!(isLoading || isEmpty || isError) && displayPopular && (
             <ScrollView>
-              {popular.map((section, index) => (
-                <PodcastSection
-                  key={index}
-                  section={section}
-                  routeName={'Podcast'}
-                />
-              ))}
+              {popular.map((section, index) =>
+                section.items.length > 0 ? (
+                  <PodcastSection
+                    key={index}
+                    section={section}
+                    routeName={'Podcast'}
+                  />
+                ) : null
+              )}
             </ScrollView>
           )}
           {!(isLoading || isEmpty || isError) && displaySearch && (
