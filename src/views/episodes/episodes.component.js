@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-import PodcastItem from '../../components/podcast-item';
+import PodcastSection from '../../components/podcast-section/podcast-section.component';
 
 export default class EpisodesComponent extends Component {
   componentDidMount() {
@@ -15,16 +15,11 @@ export default class EpisodesComponent extends Component {
       <View style={styles.container}>
         {isLoading && <Text>Loading episodes</Text>}
         {!(isLoading || isEmpty || isError) && episodes.length > 0 && (
-          <ScrollView>
-            {episodes.map((podcast, index) => (
-              <PodcastItem
-                key={index}
-                title={'title'}
-                podcast={podcast}
-                routeName={'Play'}
-              />
-            ))}
-          </ScrollView>
+          <PodcastSection
+            section={{ items: episodes }}
+            routeName={'Play'}
+            isVertical
+          />
         )}
       </View>
     );

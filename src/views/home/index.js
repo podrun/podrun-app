@@ -11,6 +11,7 @@ const mapStateToProps = state => ({
   displayPopular: state.root.displayPopular,
   displaySearch: state.root.displaySearch,
   isSearchLoading: state.root.isSearchLoading,
+  searchTerm: state.root.searchTerm,
   isLoading: state.root.isPopularLoading || state.root.isSearchLoading,
   isEmpty: state.root.isSearchEmpty,
   isError: state.root.isSearchError || state.root.isPopularError,

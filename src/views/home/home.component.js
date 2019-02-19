@@ -30,7 +30,8 @@ export default class HomeComponent extends Component {
       displaySearch,
       clearResults,
       results,
-      popular
+      popular,
+      searchTerm
     } = this.props;
     return (
       <View style={styles.container}>
@@ -50,13 +51,26 @@ export default class HomeComponent extends Component {
           {!(isLoading || isEmpty || isError) && displayPopular && (
             <ScrollView>
               {popular.map((section, index) => (
-                <PodcastSection key={index} section={section} />
+                <PodcastSection
+                  key={index}
+                  section={section}
+                  routeName={'Podcast'}
+                />
               ))}
             </ScrollView>
           )}
           {!(isLoading || isEmpty || isError) && displaySearch && (
             <ScrollView>
-              <PodcastSection section={{ items: results }} />
+              <PodcastSection
+                section={{
+                  listName: `We found ${
+                    results.length
+                  } results for "${searchTerm}"`,
+                  items: results
+                }}
+                isVertical
+                routeName={'Podcast'}
+              />
             </ScrollView>
           )}
         </View>
