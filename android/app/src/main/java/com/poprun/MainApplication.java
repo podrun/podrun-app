@@ -3,6 +3,7 @@ package com.poprun;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.react.rnspinkit.RNSpinkitPackage;
 import com.guichaguri.trackplayer.TrackPlayer;
 import com.media.MediaPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSpinkitPackage(),
             new TrackPlayer(),
             new MediaPackage(),
             new RNGestureHandlerPackage(),

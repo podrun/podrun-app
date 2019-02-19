@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import Loading from '../../components/loading/loading.component';
 import PodcastSection from '../../components/podcast-section/podcast-section.component';
 
 export default class EpisodesComponent extends Component {
@@ -13,7 +14,7 @@ export default class EpisodesComponent extends Component {
     const { isLoading, isEmpty, isError, episodes } = this.props;
     return (
       <View style={styles.container}>
-        {isLoading && <Text>Loading episodes</Text>}
+        {isLoading && <Loading text={'Fetching latest episodes'} />}
         {!(isLoading || isEmpty || isError) && episodes.length > 0 && (
           <PodcastSection
             section={{ items: episodes }}

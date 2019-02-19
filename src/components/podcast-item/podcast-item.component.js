@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
-import { ParallaxImage } from 'react-native-snap-carousel';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 
 import styles from './styles';
 
 export default class PodcastItem extends Component {
-  static propTypes = {
-    data: PropTypes.object.isRequired,
-    even: PropTypes.bool,
-    parallax: PropTypes.bool,
-    parallaxProps: PropTypes.object
-  };
-
   parseHTML(htmlString) {
     const regex = /(<([^>]+)>)/gi;
     return htmlString ? htmlString.replace(regex, '') : '';
@@ -21,22 +12,17 @@ export default class PodcastItem extends Component {
   get image() {
     const {
       data: { highResImage },
-      parallaxProps,
       even
     } = this.props;
 
     return (
-      <ParallaxImage
+      <Image
         source={{ uri: highResImage }}
         containerStyle={[
           styles.imageContainer,
           even ? styles.imageContainerEven : {}
         ]}
         style={styles.image}
-        parallaxFactor={0.35}
-        showSpinner={true}
-        spinnerColor={even ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.25)'}
-        {...parallaxProps}
       />
     );
   }
