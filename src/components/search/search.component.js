@@ -53,6 +53,12 @@ export default class SearchComponent extends Component {
         onX={this.clearSearch}
         value={search}
         showOnLoad
+        backgroundColor={'#004363'}
+        iconColor={'#faf6bc'}
+        textColor={'#faf6bc'}
+        selectionColor={'#faf6bc'}
+        placeholderTextColor={'#c9c580'}
+        iOSHideShadow={true}
       />
     );
   }
