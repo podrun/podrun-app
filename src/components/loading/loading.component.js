@@ -9,7 +9,7 @@ const Loading = ({ text }) => (
       isVisible={true}
       size={100}
       type={'Pulse'}
-      color={'#4286f4'}
+      color={'#faf6bc'}
     />
     <Text style={styles.text}>{text ? text : 'Loading...'}</Text>
   </View>
@@ -20,13 +20,13 @@ var styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff'
+    backgroundColor: '#004363'
   },
   spinner: {
     marginBottom: 50
   },
   text: {
-    color: '#4286f4',
+    color: '#faf6bc',
     paddingHorizontal: 30,
     backgroundColor: 'transparent',
     fontSize: 20,

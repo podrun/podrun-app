@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "default.png",
+      "filename" : "podrun.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "default-1.png",
+      "filename" : "podrun-1.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "default-2.png",
+      "filename" : "podrun-2.png",
       "scale" : "3x"
     }
   ],

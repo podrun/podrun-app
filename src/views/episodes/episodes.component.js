@@ -29,10 +29,11 @@ export default class EpisodesComponent extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#004363'
   },
   text: {
-    color: 'white',
+    color: '#faf6bc',
     fontSize: 20,
     padding: 20
   }

@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    backgroundColor: '#004363'
   },
   search: {
     height: '5%'
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     height: '95%'
   },
   text: {
-    color: 'white',
+    color: '#faf6bc',
     fontSize: 20,
     padding: 20
   }

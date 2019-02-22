@@ -3,6 +3,7 @@ package com.poprun;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.guichaguri.trackplayer.TrackPlayer;
 import com.media.MediaPackage;
@@ -32,6 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SplashScreenReactPackage(),
             new RNSpinkitPackage(),
             new TrackPlayer(),
             new MediaPackage(),
