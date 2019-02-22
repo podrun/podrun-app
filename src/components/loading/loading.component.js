@@ -8,7 +8,7 @@ const Loading = ({ text }) => (
       style={styles.spinner}
       isVisible={true}
       size={100}
-      type={'Pulse'}
+      type={'ThreeBounce'}
       color={'#faf6bc'}
     />
     <Text style={styles.text}>{text ? text : 'Loading...'}</Text>
