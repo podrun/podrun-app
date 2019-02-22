@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -66,6 +65,9 @@
 		E27A15A74ED14066B5DAEF66 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47ADA49591E0411792A25EEC /* EvilIcons.ttf */; };
 		F4A9E66FA92C4757AB6EF486 /* libRNTrackPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D016A23E7A44A728A68C279 /* libRNTrackPlayer.a */; };
 		FF70B3D67AEE4CCB91E8DA63 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4ACE3C65FA41D0B275110C /* libRNGestureHandler.a */; };
+		6BD293E16CD444EAAA53D2ED /* PlayfairDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F75AF8F2FF9741649AF93D59 /* PlayfairDisplay-Bold.ttf */; };
+		2B4731D1AFCD42268916E751 /* PlayfairDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 224635AD0DC444ECACAD0627 /* PlayfairDisplay-Regular.ttf */; };
+		E1044D83F5CF40F0A51A3DB0 /* Rounded_Elegance.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B97E311DFAFC4C1A85DFC68C /* Rounded_Elegance.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -475,6 +477,9 @@
 		E1BC13354BC745BA81656DA6 /* RNSVG.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSVG.xcodeproj; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; };
 		ECDF5ABBEE44460585E14C19 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		F56E92E854E2458EBB3A4F45 /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
+		F75AF8F2FF9741649AF93D59 /* PlayfairDisplay-Bold.ttf */ = {isa = PBXFileReference; name = "PlayfairDisplay-Bold.ttf"; path = "../assets/fonts/PlayfairDisplay-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		224635AD0DC444ECACAD0627 /* PlayfairDisplay-Regular.ttf */ = {isa = PBXFileReference; name = "PlayfairDisplay-Regular.ttf"; path = "../assets/fonts/PlayfairDisplay-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B97E311DFAFC4C1A85DFC68C /* Rounded_Elegance.ttf */ = {isa = PBXFileReference; name = "Rounded_Elegance.ttf"; path = "../assets/fonts/Rounded_Elegance.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -769,6 +774,9 @@
 				669A3D508CA243C691680804 /* Octicons.ttf */,
 				B29DF96455DE4E29A7FEDD1D /* SimpleLineIcons.ttf */,
 				BE99B8581A8C48C1BEEC1376 /* Zocial.ttf */,
+				F75AF8F2FF9741649AF93D59 /* PlayfairDisplay-Bold.ttf */,
+				224635AD0DC444ECACAD0627 /* PlayfairDisplay-Regular.ttf */,
+				B97E311DFAFC4C1A85DFC68C /* Rounded_Elegance.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1421,6 +1429,9 @@
 				48ADE44653D84D57A7AB58A1 /* Octicons.ttf in Resources */,
 				B7B1CCB8904749E3AEB66D60 /* SimpleLineIcons.ttf in Resources */,
 				B7E228AA8D5E4051AF083BE0 /* Zocial.ttf in Resources */,
+				6BD293E16CD444EAAA53D2ED /* PlayfairDisplay-Bold.ttf in Resources */,
+				2B4731D1AFCD42268916E751 /* PlayfairDisplay-Regular.ttf in Resources */,
+				E1044D83F5CF40F0A51A3DB0 /* Rounded_Elegance.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

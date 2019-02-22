@@ -37,6 +37,8 @@ export default StyleSheet.create({
     color: '#faf6bc',
     fontSize: 20,
     fontWeight: 'bold',
+    letterSpacing: 5,
+    fontFamily: 'PlayfairDisplay-Bold',
     textAlign: 'center'
   },
   titleDark: {

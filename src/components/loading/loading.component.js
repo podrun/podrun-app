@@ -30,7 +30,8 @@ var styles = StyleSheet.create({
     paddingHorizontal: 30,
     backgroundColor: 'transparent',
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'PlayfairDisplay-Regular',
+    letterSpacing: 5,
     textAlign: 'center'
   }
 });
