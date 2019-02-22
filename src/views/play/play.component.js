@@ -10,6 +10,7 @@ import {
 import { WebView } from 'react-native-webview';
 import TrackPlayer, { ProgressComponent } from 'react-native-track-player';
 import _ from 'lodash';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import PlayItem from '../../components/play-item/play-item.component';
 import Controls from '../../components/controls/controls.component';
@@ -36,9 +37,11 @@ export default class PlayComponent extends Component {
 
   static navigationOptions = ({ navigation }) => ({
     headerRight: (
-      <Button
+      <Icon.Button
+        name="gear"
+        color="#faf6bc"
+        backgroundColor="none"
         onPress={() => navigation.navigate('Settings')}
-        title="Settings"
       />
     )
   });
